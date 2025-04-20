@@ -1,22 +1,82 @@
--- Hanif Style Blue Lock: Rivals (Client-Side Only) -- by @LYNCX - Custom Style Script
+-- Hanif Style (Client Style Spoof + Skill Override)
+local UIS = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local Debris = game:GetService("Debris")
+local player = Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
 
-local UIS = game:GetService("UserInputService") local Players = game:GetService("Players") local Debris = game:GetService("Debris") local player = Players.LocalPlayer local char = player.Character or player.CharacterAdded:Wait() local hrp = char:WaitForChild("HumanoidRootPart")
+-- [1] Ganti teks UI style jadi “Hanif Style”
+task.wait(3) -- tunggu UI muncul dulu
+for _, ui in ipairs(player:WaitForChild("PlayerGui"):GetDescendants()) do
+    if ui:IsA("TextLabel") or ui:IsA("TextButton") then
+        if string.find(ui.Text:lower(), "style") then
+            ui.Text = "Hanif Style"
+        end
+    end
+end
 
--- EFFECT HANDLER local function createAura(color, size, lifetime, texture) local aura = Instance.new("ParticleEmitter") aura.Color = ColorSequence.new(color) aura.Size = NumberSequence.new(size or 2) aura.Lifetime = NumberRange.new(lifetime or 1) aura.Rate = 50 aura.Speed = NumberRange.new(0, 0) aura.Texture = texture or "rbxassetid://1049219075" aura.Parent = hrp Debris:AddItem(aura, 2) end
+-- [2] Fungsi aura efek
+local function playAura(color)
+    local aura = Instance.new("ParticleEmitter")
+    aura.Color = ColorSequence.new(color)
+    aura.Size = NumberSequence.new(1.5)
+    aura.Lifetime = NumberRange.new(0.5)
+    aura.Rate = 100
+    aura.Texture = "rbxassetid://1049219075"
+    aura.VelocitySpread = 180
+    aura.Speed = NumberRange.new(4)
+    aura.Parent = hrp
+    Debris:AddItem(aura, 1.5)
+end
 
--- HANIF STYLE INTRO local gui = Instance.new("BillboardGui", hrp) gui.Size = UDim2.new(5, 0, 2, 0) gui.StudsOffset = Vector3.new(0, 4, 0) gui.AlwaysOnTop = true
+-- [3] Abilities
+local function nutmeg()
+    playAura(Color3.fromRGB(255, 255, 0))
+    hrp.CFrame = hrp.CFrame * CFrame.new(3, 0, 0)
+end
 
-local text = Instance.new("TextLabel", gui) text.Size = UDim2.new(1, 0, 1, 0) text.BackgroundTransparency = 1 text.Text = "HANIF STYLE" text.TextColor3 = Color3.fromRGB(0, 255, 255) text.TextStrokeTransparency = 0 text.TextScaled = true text.Font = Enum.Font.GothamBlack Debris:AddItem(gui, 5)
+local function seriousShoot()
+    for _, col in ipairs({
+        Color3.fromRGB(0, 255, 255),
+        Color3.fromRGB(0, 0, 255),
+        Color3.fromRGB(255, 255, 255)
+    }) do
+        playAura(col)
+    end
+end
 
--- SKILL 1: Nutmeg (Z) local function nutmeg() local direction = hrp.CFrame.lookVector hrp.CFrame = hrp.CFrame + direction * 6 createAura(Color3.fromRGB(255, 255, 0), 2, 1) end
+local function backheelShoot()
+    playAura(Color3.fromRGB(255, 100, 0))
+    hrp.CFrame = hrp.CFrame * CFrame.new(0, 0, -6)
+end
 
--- SKILL 2: Serious Shoot (X) local function seriousShoot() createAura(Color3.fromRGB(0, 255, 255), 2, 1.5) createAura(Color3.fromRGB(0, 0, 255), 3, 1.5) createAura(Color3.fromRGB(255, 255, 255), 4, 2) end
+local function absoluteShoot()
+    for _, col in ipairs({
+        Color3.fromRGB(255, 255, 255),
+        Color3.fromRGB(0, 255, 255),
+        Color3.fromRGB(0, 0, 255),
+        Color3.fromRGB(0, 0, 0)
+    }) do
+        playAura(col)
+    end
+    local bv = Instance.new("BodyVelocity")
+    bv.Velocity = hrp.CFrame.LookVector * 80
+    bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+    bv.Parent = hrp
+    Debris:AddItem(bv, 0.4)
+end
 
--- SKILL 3: Backheel Shoot (C) local function backheelShoot() local direction = hrp.CFrame.lookVector hrp.CFrame = hrp.CFrame + direction * 5 createAura(Color3.fromRGB(255, 0, 0), 2.5, 1) end
-
--- SKILL 4: Absolute Shoot (V) local function absoluteShoot() createAura(Color3.fromRGB(255, 255, 255), 3, 2) createAura(Color3.fromRGB(0, 255, 255), 3, 2) createAura(Color3.fromRGB(0, 0, 255), 3, 2) createAura(Color3.fromRGB(0, 0, 0), 4, 1.5) end
-
--- BIND SKILLS UIS.InputBegan:Connect(function(input, gpe) if gpe then return end local key = input.KeyCode if key == Enum.KeyCode.Z then nutmeg() elseif key == Enum.KeyCode.X then seriousShoot() elseif key == Enum.KeyCode.C then backheelShoot() elseif key == Enum.KeyCode.V then absoluteShoot() end end)
-
--- DONE
-
+-- [4] Keybind
+UIS.InputBegan:Connect(function(input, gp)
+    if gp then return end
+    if input.KeyCode == Enum.KeyCode.Z then
+        nutmeg()
+    elseif input.KeyCode == Enum.KeyCode.X then
+        seriousShoot()
+    elseif input.KeyCode == Enum.KeyCode.C then
+        backheelShoot()
+    elseif input.KeyCode == Enum.KeyCode.V then
+        absoluteShoot()
+    end
+end)
