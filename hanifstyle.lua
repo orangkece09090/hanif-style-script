@@ -1,88 +1,97 @@
--- Hanif Style Mobile GUI + Skill Script (Blue Lock: Rivals)
-local UIS = game:GetService("UserInputService")
-local Players = game:GetService("Players")
-local Debris = game:GetService("Debris")
-local player = Players.LocalPlayer
-local char = player.Character or player.CharacterAdded:Wait()
-local hrp = char:WaitForChild("HumanoidRootPart")
+-- Hanif Style [Modded] - Blue Lock: Rivals (Client-side Mod)
+-- Full client-side script to replace current style visuals and skills
 
--- GUI Utama
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "HanifStyleMobile"
-screenGui.ResetOnSpawn = false
-screenGui.Parent = player:WaitForChild("PlayerGui")
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local uis = game:GetService("UserInputService")
+local StarterGui = game:GetService("StarterGui")
 
--- Fungsi buat bikin tombol
-local function buatTombol(nama, pos, warna, aksi)
-    local tombol = Instance.new("TextButton")
-    tombol.Text = nama
-    tombol.Size = UDim2.new(0, 120, 0, 40)
-    tombol.Position = pos
-    tombol.BackgroundColor3 = warna
-    tombol.TextColor3 = Color3.new(1,1,1)
-    tombol.TextScaled = true
-    tombol.Font = Enum.Font.GothamBold
-    tombol.Parent = screenGui
-
-    tombol.MouseButton1Click:Connect(function()
-        aksi()
-    end)
+-- GUI Style Replacement
+local function overrideStyleUI()
+    local styleGui = player:WaitForChild("PlayerGui"):WaitForChild("MainUI"):WaitForChild("Aliran"):WaitForChild("CurrentStyle")
+    styleGui.StyleName.Text = "Hanif [Modded]"
+    styleGui.Description.Text = "Penguasa lapangan dengan gaya main ekstrem dan skill brutal."
+    styleGui.Icon.Image = "rbxassetid://15792450065" -- contoh icon custom
 end
 
--- Efek aura
-local function playAura(color)
-    local aura = Instance.new("ParticleEmitter", hrp)
-    aura.Color = ColorSequence.new(color)
-    aura.Size = NumberSequence.new(2)
-    aura.Lifetime = NumberRange.new(1)
-    aura.Rate = 50
-    aura.Texture = "rbxassetid://1049219075"
-    Debris:AddItem(aura, 2)
+-- VFX Skill Templates
+local function playVFX(name)
+    local effect = Instance.new("BillboardGui")
+    effect.Size = UDim2.new(0, 200, 0, 50)
+    effect.StudsOffset = Vector3.new(0, 4, 0)
+    effect.Adornee = character:FindFirstChild("Head")
+    effect.AlwaysOnTop = true
+
+    local text = Instance.new("TextLabel")
+    text.Size = UDim2.new(1, 0, 1, 0)
+    text.BackgroundTransparency = 1
+    text.TextColor3 = Color3.new(1, 0.2, 0.2)
+    text.TextStrokeTransparency = 0
+    text.TextScaled = true
+    text.Font = Enum.Font.GothamBlack
+    text.Text = name
+    text.Parent = effect
+
+    effect.Parent = character
+    game.Debris:AddItem(effect, 1.5)
 end
 
--- Skill
-local function nutmeg()
-    hrp.CFrame = hrp.CFrame * CFrame.new(5, 0, 0)
-    playAura(Color3.fromRGB(255, 255, 0))
+-- Hanif Skill Abilities
+local function Nutmeg()
+    playVFX("Nutmeg")
+    -- Custom animation/effect here
 end
 
-local function seriousShoot()
-    playAura(Color3.fromRGB(0, 255, 255))
-    playAura(Color3.fromRGB(0, 0, 255))
+local function SeriousShoot()
+    playVFX("Serious Shoot")
+    -- Custom animation/effect here
 end
 
-local function backheelShoot()
-    hrp.CFrame = hrp.CFrame * CFrame.new(7, 0, 0)
-    playAura(Color3.fromRGB(255, 0, 0))
+local function BackheelShoot()
+    playVFX("Backheel Shoot")
+    -- Custom animation/effect here
 end
 
-local function absoluteShoot()
-    playAura(Color3.fromRGB(255, 255, 255))
-    playAura(Color3.fromRGB(0, 0, 255))
-    playAura(Color3.fromRGB(0, 255, 255))
+local function AbsoluteShoot()
+    playVFX("Absolute Shoot")
+    -- Custom animation/effect here
 end
 
--- Tombol di layar
-buatTombol("Nutmeg", UDim2.new(0.05, 0, 0.7, 0), Color3.fromRGB(255, 170, 0), nutmeg)
-buatTombol("Serious", UDim2.new(0.3, 0, 0.7, 0), Color3.fromRGB(0, 200, 255), seriousShoot)
-buatTombol("Backheel", UDim2.new(0.55, 0, 0.7, 0), Color3.fromRGB(255, 0, 100), backheelShoot)
-buatTombol("Absolute", UDim2.new(0.8, 0, 0.7, 0), Color3.fromRGB(255, 255, 255), absoluteShoot)
+-- Android-friendly GUI
+local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 180, 0, 220)
+frame.Position = UDim2.new(0.85, 0, 0.5, -110)
+frame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+frame.BackgroundTransparency = 0.3
+frame.BorderSizePixel = 0
 
--- Label info
-local label = Instance.new("TextLabel")
-label.Parent = screenGui
-label.Text = "Hanif Style Activated!"
-label.Size = UDim2.new(0, 300, 0, 40)
-label.Position = UDim2.new(0.5, -150, 0.05, 0)
-label.TextColor3 = Color3.new(1,1,1)
-label.BackgroundColor3 = Color3.new(0,0,0)
-label.BackgroundTransparency = 0.3
-label.TextScaled = true
-label.Font = Enum.Font.GothamBold
+local skills = {
+    {"Nutmeg", Nutmeg},
+    {"Serious", SeriousShoot},
+    {"Backheel", BackheelShoot},
+    {"Absolute", AbsoluteShoot},
+}
 
--- Hapus tulisan setelah 8 detik
-task.delay(8, function()
-    if label then
-        label:Destroy()
-    end
-end)
+for i, skill in ipairs(skills) do
+    local btn = Instance.new("TextButton", frame)
+    btn.Size = UDim2.new(1, -10, 0, 40)
+    btn.Position = UDim2.new(0, 5, 0, (i - 1) * 50 + 5)
+    btn.Text = skill[1]
+    btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    btn.TextColor3 = Color3.new(1, 1, 1)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextScaled = true
+    btn.MouseButton1Click:Connect(skill[2])
+end
+
+-- Run override
+overrideStyleUI()
+
+StarterGui:SetCore("SendNotification", {
+    Title = "Hanif Style [Modded]",
+    Text = "Activated successfully!",
+    Duration = 5
+})
+
